@@ -1,4 +1,4 @@
-package com.example.sensory_stuff
+package com.example.guard_sync.sensors
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -7,7 +7,6 @@ import javax.inject.Inject
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import android.hardware.SensorManager
-import androidx.core.graphics.rotationMatrix
 
 @HiltViewModel
 class MainViewModel @Inject constructor(

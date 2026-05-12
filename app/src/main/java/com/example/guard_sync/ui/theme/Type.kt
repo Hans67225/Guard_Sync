@@ -1,4 +1,4 @@
-package com.example.sensory_stuff.ui.theme
+package com.example.guard_sync.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.example.sensory_stuff
+package com.example.guard_sync
 
 import org.junit.Test
 

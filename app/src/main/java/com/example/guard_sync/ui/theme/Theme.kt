@@ -1,6 +1,5 @@
-package com.example.sensory_stuff.ui.theme
+package com.example.guard_sync.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

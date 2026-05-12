@@ -1,4 +1,4 @@
-package com.example.sensory_stuff
+package com.example.guard_sync
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

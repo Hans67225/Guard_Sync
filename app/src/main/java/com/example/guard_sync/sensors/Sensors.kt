@@ -1,4 +1,4 @@
-package com.example.sensory_stuff
+package com.example.guard_sync.sensors
 
 import android.content.Context
 import android.content.pm.PackageManager

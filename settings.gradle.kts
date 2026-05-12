@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Sensory_Stuff"
+rootProject.name = "Guard_Sync"
 include(":app")

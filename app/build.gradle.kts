@@ -13,7 +13,7 @@ plugins {
 android {
 
 
-    namespace = "com.example.sensory_stuff"
+    namespace = "com.example.guard_sync"
     compileSdk  = 36
 
 
