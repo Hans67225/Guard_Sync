@@ -21,10 +21,6 @@ annotation class AccelerometerQualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class HeadingSensorQualifier
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class TempSensorQualifier
-
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -51,11 +47,5 @@ object SensorModule {
         return HeadingSensor(app)
     }
 
-    @Provides
-    @Singleton
-    @TempSensorQualifier
-    fun provideTempSensor(app: Application): MeasurableSensor {
-        return TempSensor(app)
-    }
 
 }

@@ -45,11 +45,15 @@ class DefaultLocationClient(
                 }
             }
 
-            client.requestLocationUpdates(
-                request,
-                locationCallback,
-                Looper.getMainLooper()
-            )
+            try {
+                client.requestLocationUpdates(
+                    request,
+                    locationCallback,
+                    Looper.getMainLooper()
+                )
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
 
             awaitClose {
                 client.removeLocationUpdates(locationCallback)

@@ -13,7 +13,6 @@ class MainViewModel @Inject constructor(
     //private val lightSensor: MeasurableSensor
     @LightSensorQualifier private val lightSensor: MeasurableSensor,
     @AccelerometerQualifier private val accelerometerSensor: MeasurableSensor,
-    @TempSensorQualifier private val tempSensor: MeasurableSensor,
     @HeadingSensorQualifier private val headingSensor: MeasurableSensor
 ) : ViewModel() {
 
@@ -62,9 +61,6 @@ class MainViewModel @Inject constructor(
             roll = Math.toDegrees(orientation[2].toDouble()).toFloat()
         }
 
-        tempSensor.startListening()
-        tempSensor.setOnSensorValuesChangedListener { values ->
-            t = values[0]
-        }
+
     }
 }

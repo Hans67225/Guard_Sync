@@ -53,6 +53,9 @@ class LocationService : Service() {
             .getLocationUpdates(1000L)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
+
+                android.util.Log.d("LOC_DEBUG", "Got location: $location")
+
                 val lat = location.latitude
                 val long = location.longitude
                 val updatedNotification = notification.setContentText(

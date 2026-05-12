@@ -1,12 +1,15 @@
-package com.example.guard_sync.geo_locn
-/*
+package com.example.guard_sync
+
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 
-class LocationApp: Application() {
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class CombinedApp: Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -21,5 +24,3 @@ class LocationApp: Application() {
         }
     }
 }
-
- */

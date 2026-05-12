@@ -28,10 +28,4 @@ class HeadingSensor(
     sensorType = Sensor.TYPE_ROTATION_VECTOR
 )
 
-class TempSensor(
-    context: Context
-) : AndroidSensor(
-    context = context,
-    sensorFeature = PackageManager.FEATURE_SENSOR_AMBIENT_TEMPERATURE,
-    sensorType = Sensor.TYPE_AMBIENT_TEMPERATURE
-)
+

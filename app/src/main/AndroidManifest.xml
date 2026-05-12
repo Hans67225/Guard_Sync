@@ -6,10 +6,12 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
-        android:name=".geo_locn.LocationApp"
-        android:name="com.example.guard_sync.sensors.SensorApp"
+
+        android:name=".CombinedApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -19,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sensory_Stuff">
 
-        <service android:name=".geo_locn.LocationService" android:foregroundServiceType="location" />
+        <service android:name=".geo_locn.LocationService" android:foregroundServiceType="location" android:exported="false" />
 
         <activity
             android:name="com.example.guard_sync.MainActivity"
