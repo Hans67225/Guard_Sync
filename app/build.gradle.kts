@@ -89,6 +89,8 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
 
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+
 
 
 }

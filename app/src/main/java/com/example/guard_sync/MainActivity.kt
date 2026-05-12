@@ -15,18 +15,36 @@ import com.example.guard_sync.ui.theme.Sensory_StuffTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
+import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import com.example.guard_sync.geo_locn.LocationService
 //import com.example.guard_sync.sensors.MainViewModel
 
 import com.example.guard_sync.sensors.*
+import java.util.jar.Manifest
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ),
+            0
+        )
 
         val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
@@ -63,19 +81,31 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-              /*  Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            if(isDark) Color.DarkGray else Color.White
-                        ),
-                    contentAlignment = Alignment.Center
-                ){
-                    Text(
-                        text = "X: $x \nY: $y \nZ: $z",
-                        color = if(isDark) Color.White else Color.DarkGray
-                    )
-                } */
+
+            }
+
+            BackgroundLocationTrackingTheme {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Button(onClick = {
+                        Intent(applicationContext, LocationService::class.java).apply {
+                            action = LocationService.ACTION_START
+                            startService(this)
+                        }
+                    }) {
+                        Text(text = "Start")
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = {
+                        Intent(applicationContext, LocationService::class.java).apply {
+                            action = LocationService.ACTION_STOP
+                            startService(this)
+                        }
+                    }) {
+                        Text(text = "Stop")
+                    }
+                }
             }
         }
     }
