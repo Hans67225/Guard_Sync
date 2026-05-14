@@ -16,6 +16,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlin.math.round
 
 private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 private lateinit var locationClient: LocationClient
@@ -41,6 +42,21 @@ class LocationService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    val targetLat = 22.5726
+    val targetLong = 88.3639
+    val radius = 100.0
+
+    fun distanceInMeters(
+        lat1: Double, lon1: Double,
+        lat2: Double, lon2: Double
+    ): Double {
+        val results = FloatArray(1)
+        android.location.Location.distanceBetween(
+            lat1, lon1, lat2, lon2, results
+        )
+        return results[0].toDouble()
+    }
+
     private fun start() {
         val notification = NotificationCompat.Builder(this,"location")
             .setContentTitle("Tracking Location...")
@@ -59,17 +75,35 @@ class LocationService : Service() {
 
                 Log.d("LOC_DEBUG", "Got location: $location")
 
-                val lat = location.latitude
-                val long = location.longitude
+
+                val lat = round(location.latitude * 100) / 100
+                val long = round(location.longitude * 100) / 100
 
                 LocationHolder.location.value = Pair(lat, long)
 
+                val distance = distanceInMeters(lat, long, targetLat, targetLong)
+
+                if (distance <= radius) {
+                    Log.d("GEOFENCE", "Inside area")
+                    val updatedNotification = notification.setContentText(
+                        "Location: ($lat,$long), On Location"
+                    )
+                    notificationManager.notify(1, updatedNotification.build())
+
+                } else {
+                    Log.d("GEOFENCE", "Outside area")
+                    val updatedNotification = notification.setContentText(
+                        "Location: ($lat,$long), NOT on Location"
+                    )
+                    notificationManager.notify(1, updatedNotification.build())
+                }
+
                // locationCallback?.onLocationUpdated(lat,long)
 
-                val updatedNotification = notification.setContentText(
-                    "Location: ($lat,$long)"
-                )
-                notificationManager.notify(1, updatedNotification.build())
+//                val updatedNotification = notification.setContentText(
+//                    "Location: ($lat,$long)"
+//                )
+//                notificationManager.notify(1, updatedNotification.build())
             }
             .launchIn(serviceScope)
 

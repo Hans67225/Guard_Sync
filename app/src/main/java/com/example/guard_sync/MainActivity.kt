@@ -124,6 +124,8 @@ class MainActivity : ComponentActivity() {
                     var mapRef: MapLibreMap? = null
                     val location by LocationHolder.location.collectAsState()
 
+
+
                     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
 
                     NavigationSuiteScaffold(
@@ -205,6 +207,8 @@ class MainActivity : ComponentActivity() {
                                                             map.addMarker(MarkerOptions().position(point))
                                                             map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15.0))
                                                         }
+
+
                                                     }
                                                 }
                                             },
