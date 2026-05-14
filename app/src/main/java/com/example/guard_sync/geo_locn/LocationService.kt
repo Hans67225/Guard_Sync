@@ -62,7 +62,7 @@ class LocationService : Service() {
                 val lat = location.latitude
                 val long = location.longitude
 
-
+                LocationHolder.location.value = Pair(lat, long)
 
                // locationCallback?.onLocationUpdated(lat,long)
 

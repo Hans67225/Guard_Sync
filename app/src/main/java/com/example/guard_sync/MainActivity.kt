@@ -58,11 +58,15 @@ import androidx.navigation.compose.*
 
 
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.runtime.collectAsState
 
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-
+import com.example.guard_sync.geo_locn.LocationHolder
+import org.maplibre.android.annotations.MarkerOptions
+import org.maplibre.android.camera.CameraUpdateFactory
+import org.maplibre.android.geometry.LatLng
 
 
 @AndroidEntryPoint
@@ -117,6 +121,9 @@ class MainActivity : ComponentActivity() {
                     val roll = viewModel.roll
 
                     var showMap by remember { mutableStateOf(true) }
+                    var mapRef: MapLibreMap? = null
+                    val location by LocationHolder.location.collectAsState()
+
                     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
 
                     NavigationSuiteScaffold(
@@ -188,18 +195,25 @@ class MainActivity : ComponentActivity() {
                                                 MapView(context).apply {
                                                     getMapAsync { map ->
                                                         map.setStyle("https://demotiles.maplibre.org/style.json")
+                                                        location?.let {
+                                                            val lat = it.first
+                                                            val long = it.second
+
+                                                            val point = LatLng(lat, long)
+
+                                                            map.clear()
+                                                            map.addMarker(MarkerOptions().position(point))
+                                                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15.0))
+                                                        }
                                                     }
                                                 }
                                             },
+
+
+
                                             modifier = Modifier.fillMaxSize()
                                         )
                                     }
-//                                    Button(
-//                                        onClick = { showMap = !showMap },
-//                                        modifier = Modifier.align(Alignment.BottomCenter)
-//                                    ) {
-//                                        Text(if (showMap) "Hide Map" else "Show Map")
-//                                    }
                                 }
 
                                 AppDestinations.PROFILE -> Text(
