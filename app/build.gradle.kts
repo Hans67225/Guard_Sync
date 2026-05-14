@@ -16,13 +16,22 @@ android {
     namespace = "com.example.guard_sync"
     compileSdk  = 36
 
+    sourceSets {
+        getByName("debug") {
+            java.srcDir("build/generated/ksp/debug/kotlin")
+        }
+        getByName("release") {
+            java.srcDir("build/generated/ksp/release/kotlin")
+        }
+    }
+
 
 
 
 
     defaultConfig {
 
-        applicationId = "com.example.sensory_stuff"
+        applicationId = "com.example.guard_sync"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -90,6 +99,9 @@ dependencies {
     ksp(libs.androidx.hilt.compiler)
 
     implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation(libs.maplibre.android)
+
+    implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
 
 
 

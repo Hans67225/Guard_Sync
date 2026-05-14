@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.guard_sync.R
 import com.google.android.gms.location.LocationServices
@@ -46,18 +47,25 @@ class LocationService : Service() {
             .setContentText("Location: null")
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setOngoing(true)
+        Log.d("LOCATION_DEBUG", "Service started")
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         locationClient
             .getLocationUpdates(1000L)
             .catch { e -> e.printStackTrace() }
+            
             .onEach { location ->
 
-                android.util.Log.d("LOC_DEBUG", "Got location: $location")
+                Log.d("LOC_DEBUG", "Got location: $location")
 
                 val lat = location.latitude
                 val long = location.longitude
+
+
+
+               // locationCallback?.onLocationUpdated(lat,long)
+
                 val updatedNotification = notification.setContentText(
                     "Location: ($lat,$long)"
                 )
@@ -69,7 +77,13 @@ class LocationService : Service() {
     }
 
     private fun stop() {
-        stopForeground(true)
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU){
+            stopForeground(STOP_FOREGROUND_DETACH)
+        }
+        else {
+            stopForeground(true)
+        }
+
         stopSelf()
 
     }
