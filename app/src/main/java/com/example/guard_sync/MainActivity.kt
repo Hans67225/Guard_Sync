@@ -64,6 +64,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.guard_sync.geo_locn.LocationHolder
+import org.maplibre.android.annotations.Marker
 import org.maplibre.android.annotations.MarkerOptions
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng
@@ -122,6 +123,12 @@ class MainActivity : ComponentActivity() {
 
                     var showMap by remember { mutableStateOf(true) }
                     var mapRef: MapLibreMap? = null
+
+                    var currentMarker by remember { mutableStateOf<Marker?>(null) }
+                    var targetMarker by remember { mutableStateOf<Marker?>(null) }
+                    val targetLat = 22.5726
+                    val targetLong = 88.3639
+
                     val location by LocationHolder.location.collectAsState()
 
 
@@ -196,16 +203,38 @@ class MainActivity : ComponentActivity() {
                                             factory = { context ->
                                                 MapView(context).apply {
                                                     getMapAsync { map ->
+
+                                                        mapRef = map
+
+                                                        val targetPoint = LatLng(targetLat, targetLong)
+
+                                                        targetMarker = map.addMarker(
+                                                            MarkerOptions()
+                                                                .position(targetPoint)
+                                                                .title("Target Location")
+                                                        )
+
+
                                                         map.setStyle("https://demotiles.maplibre.org/style.json")
-                                                        location?.let {
-                                                            val lat = it.first
-                                                            val long = it.second
+                                                        mapRef.let { map ->
+                                                            location?.let {
 
-                                                            val point = LatLng(lat, long)
+                                                                val point = LatLng(it.first, it.second)
 
-                                                            map.clear()
-                                                            map.addMarker(MarkerOptions().position(point))
-                                                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15.0))
+                                                                if (currentMarker == null) {
+                                                                    currentMarker = map.addMarker(
+                                                                        MarkerOptions()
+                                                                            .position(point)
+                                                                            .title("You")
+                                                                    )
+                                                                } else {
+                                                                    currentMarker?.position = point
+                                                                }
+
+                                                                map.animateCamera(
+                                                                    CameraUpdateFactory.newLatLngZoom(point, 15.0)
+                                                                )
+                                                            }
                                                         }
 
 
