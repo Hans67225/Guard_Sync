@@ -1,5 +1,6 @@
 package com.example.guard_sync
 
+import android.app.NotificationManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -72,6 +73,7 @@ import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng
 import kotlin.math.abs
 import androidx.compose.ui.text.font.FontFamily.Companion.Monospace
+import androidx.core.app.NotificationCompat
 
 
 @AndroidEntryPoint
@@ -135,7 +137,6 @@ class MainActivity : ComponentActivity() {
 
                     val location by LocationHolder.location.collectAsState()
                      val state = viewModel.state
-                    //val c = viewModel.c
 
                     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
 
@@ -163,7 +164,7 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .padding(innerPadding)
-                                        .background(if (state == "Moving") Color(0xFF149981) else if (state == "Panik") Color.Red else Color.Blue),
+                                        .background(if (state == "Moving") Color(0xFF149981) else if (state == "Panik") Color.Red else if (state == "Idle") Color.Blue else Color(0xFFED239D)),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
@@ -173,7 +174,7 @@ class MainActivity : ComponentActivity() {
 //                                    )
 
                                     Text(
-                                        text = "$state",
+                                            text = if(state== "Mov Bruv") "Idle for >1 min" else "$state",
                                         fontSize = 40.sp,
                                         fontFamily = Monospace,
                                         color = if (isDark) Color.White else Color.DarkGray

@@ -1,5 +1,6 @@
 package com.example.guard_sync.sensors
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,16 +11,55 @@ import android.hardware.SensorManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.example.guard_sync.geo_locn.LocationService
 import kotlin.math.abs
 import kotlin.math.round
+import dagger.hilt.android.internal.Contexts.getApplication
+import androidx.lifecycle.AndroidViewModel
+import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.application
+import com.example.guard_sync.R
 
+@SuppressLint("MissingPermission")
+fun sendIdleNotification(context: Context) {
+    val channelId = "idle_alert_channel"
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val channel = NotificationChannel(
+            channelId,
+            "Idle Alert",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "Alerts when you've been idle too long"
+        }
+        val manager = context.getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(channel)
+    }
+
+    val notification = NotificationCompat.Builder(context, channelId)
+        .setSmallIcon(R.drawable.ic_map)
+        .setContentTitle("ALERT")
+        .setContentText("GET MOVIN")
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setAutoCancel(true)
+        .build()
+
+    NotificationManagerCompat.from(context).notify(1001, notification)
+}
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val application : Application,
     //private val lightSensor: MeasurableSensor
     @LightSensorQualifier private val lightSensor: MeasurableSensor,
     @AccelerometerQualifier private val accelerometerSensor: MeasurableSensor,
     @HeadingSensorQualifier private val headingSensor: MeasurableSensor
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     var isDark by mutableStateOf(false)
     var x by mutableStateOf(0f)
@@ -86,6 +126,12 @@ class MainViewModel @Inject constructor(
                     panikSince = 0L
                     movingSince = 0L
                     if (now - idleSince >= 5_000) state = "Idle"
+                    if(now - idleSince >= 60_000) {
+                        if (state != "Mov Bruv") {
+                            sendIdleNotification(application)
+                        }
+                        state = "Mov Bruv"
+                    }
                 }
             }
         }
