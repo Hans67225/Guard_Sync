@@ -62,12 +62,16 @@ import androidx.compose.runtime.collectAsState
 
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.example.guard_sync.geo_locn.LocationHolder
 import org.maplibre.android.annotations.Marker
 import org.maplibre.android.annotations.MarkerOptions
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng
+import kotlin.math.abs
+import androidx.compose.ui.text.font.FontFamily.Companion.Monospace
 
 
 @AndroidEntryPoint
@@ -130,8 +134,8 @@ class MainActivity : ComponentActivity() {
                     val targetLong = 88.3639
 
                     val location by LocationHolder.location.collectAsState()
-
-
+                     val state = viewModel.state
+                    //val c = viewModel.c
 
                     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
 
@@ -159,12 +163,19 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .padding(innerPadding)
-                                        .background(if (isDark) Color.DarkGray else Color.White),
+                                        .background(if (state == "Moving") Color(0xFF149981) else if (state == "Panik") Color.Red else Color.Blue),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
+//                                    Text(
+//                                        text = "\nX: $x \nY: $y \nZ: $z\nAzimuthal: $azu°\nPitch: $pitch°\nRoll: $roll°",
+//                                        color = if (isDark) Color.White else Color.DarkGray
+//                                    )
+
                                     Text(
-                                        text = "\nX: $x \nY: $y \nZ: $z\nAzimuthal: $azu°\nPitch: $pitch°\nRoll: $roll°",
+                                        text = "$state",
+                                        fontSize = 40.sp,
+                                        fontFamily = Monospace,
                                         color = if (isDark) Color.White else Color.DarkGray
                                     )
                                     Spacer(modifier = Modifier.height(16.dp))
@@ -177,7 +188,7 @@ class MainActivity : ComponentActivity() {
                                             startService(this)
                                         }
                                     }) {
-                                        Text(text = "Start Tracking")
+                                        Text(text = "Start Shift")
                                     }
                                     Spacer(modifier = Modifier.height(16.dp))
                                     Button(onClick = {
@@ -189,7 +200,7 @@ class MainActivity : ComponentActivity() {
                                             startService(this)
                                         }
                                     }) {
-                                        Text(text = "Stop Tracking")
+                                        Text(text = "End Shift")
                                     }
                                 }
 
